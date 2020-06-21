@@ -1,11 +1,8 @@
 package db;
 
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Iterator;
 
 public class DBConnectionProvider {
 

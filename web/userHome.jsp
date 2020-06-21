@@ -8,12 +8,13 @@
 </head>
 <body>
 <%
-    User user = (User) request.getAttribute("user");
-    List<User> users = (List<User>) request.getAttribute("allUsers");
+    User user = (User) session.getAttribute("user");
+    List<User> users = (List<User>) request.getAttribute("users");
     if (user != null) {
 %>
 
-Welcome!! <%=user.getName()%> <%=user.getSurname()%>. You have successfully logged in
+Welcome!! <%=user.getName()%> <%=user.getSurname()%>. You have successfully logged in<br>
+<a href="/logout">Logout</a>
 <%}%>
 <br><br>
 All Users:
@@ -23,7 +24,6 @@ All Users:
         <td>Name</td>
         <td>Surname</td>
         <td>Email</td>
-        <td>delete</td>
     </tr>
     <% for (User user1 : users) {%>
     <tr>
@@ -35,7 +35,6 @@ All Users:
         </td>
         <td><%=user1.getEmail()%>
         </td>
-        <td><a href="/removeUser?id=<%=user1.getId()%>">delete</a></td>
     </tr>
     <%} %>
 </table>

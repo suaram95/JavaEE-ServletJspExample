@@ -2,39 +2,38 @@ package servlet;
 
 import manager.UserManager;
 import model.User;
+import model.UserType;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("login.jsp").forward(req, resp);
-    }
+    private UserManager userManager = new UserManager();
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        UserManager userManager=new UserManager();
         User user = userManager.getByEmailAndPassword(email, password);
-        List<User> allUsers = userManager.getAllUsers();
 
-        if (user!=null){
-            req.setAttribute("user",user);
-            req.setAttribute("allUsers", allUsers);
-            req.getRequestDispatcher("home.jsp").forward(req,resp);
-        } else {
-            req.setAttribute("message","Email or password invalid");
-            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        if (user != null) {
+            HttpSession session = req.getSession();
+            session.setAttribute("user", user);
+            if (user.getUserType() == UserType.USER) {
+                resp.sendRedirect("/userHome");
+            } else {
+                resp.sendRedirect("/adminHome");
+            }
         }
+
+
     }
 }
